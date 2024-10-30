@@ -158,7 +158,7 @@ function TicTac() {
     });
 
     return (
-        <div className="TicTac">
+        <div className="tic-tac">
             <div className="status">{status}</div>
 
             <div className="game">
