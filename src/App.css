@@ -1,5 +1,10 @@
 .App {
   text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh; /* Make the wrapper take at least 100% of the viewport height */
 }
 
 .App-logo {
@@ -14,14 +19,28 @@
 }
 
 .App-header {
-  background-color: #282c34;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
+  background-color: #282c34;
   color: white;
+}
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%; /* Ensure body and html take up full height */
+}
+
+main {
+  flex: 1; /* This makes the main content take up remaining space */
+  padding: 20px;
+}
+
+header, footer {
+  width: 100%; /* Ensure header and footer take full width */
+}
+
+footer {
+  text-align: center;
 }
 
 .App-link {
@@ -35,4 +54,31 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+.profile-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.avatar {
+  border-radius: 50%;
+}
+
+
+nav {
+  margin-bottom: 20px;
+}
+
+nav a {
+  margin: 0 10px;
+  text-decoration: none;
+  color: white;
+}
+
+nav a:hover {
+  text-decoration: underline;
 }

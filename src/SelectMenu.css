@@ -1,0 +1,27 @@
+/* SelectMenu.css */
+.select-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    margin: 20px;
+    font-family: Arial, sans-serif;
+}
+
+.select-label {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.select-box {
+    width: 200px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.select-output {
+    margin-top: 10px;
+    font-size: 16px;
+    color: #333;
+}
