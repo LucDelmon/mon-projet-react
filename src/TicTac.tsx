@@ -30,33 +30,62 @@ interface HistoryEntry {
 }
 
 
-function calculateWinner(squares: Squares) : WinnerResult {
-    const lines = [
-        [0, 1, 2],
-        [3, 4, 5],
-        [6, 7, 8],
-        [0, 3, 6],
-        [1, 4, 7],
-        [2, 5, 8],
-        [0, 4, 8],
-        [2, 4, 6]
-    ];
-    for (let i = 0; i < lines.length; i++) {
-        const [a, b, c] = lines[i];
-        if (squares[a] && squares[a] === squares[b] && squares[a] === squares[c]) {
-            return { winner: squares[a], winningMove:lines[i] };
+function calculateWinner(squares: Squares): WinnerResult {
+    const boardSize = Math.sqrt(squares.length); // Calculate the board size dynamically
+    const lines: number[][] = [];
+
+    // Generate row winning lines
+    for (let row = 0; row < boardSize; row++) {
+        const line = [];
+        for (let col = 0; col < boardSize; col++) {
+            line.push(row * boardSize + col);
+        }
+        lines.push(line);
+    }
+
+    // Generate column winning lines
+    for (let col = 0; col < boardSize; col++) {
+        const line = [];
+        for (let row = 0; row < boardSize; row++) {
+            line.push(row * boardSize + col);
+        }
+        lines.push(line);
+    }
+
+    // Generate top-left to bottom-right diagonal
+    const topLeftBottomRight = [];
+    for (let i = 0; i < boardSize; i++) {
+        topLeftBottomRight.push(i * boardSize + i);
+    }
+    lines.push(topLeftBottomRight);
+
+    // Generate top-right to bottom-left diagonal
+    const topRightBottomLeft = [];
+    for (let i = 0; i < boardSize; i++) {
+        topRightBottomLeft.push(i * boardSize + (boardSize - 1 - i));
+    }
+    lines.push(topRightBottomLeft);
+
+    // Check for a winner
+    for (const line of lines) {
+        const [first, ...rest] = line;
+        if (squares[first] && rest.every(index => squares[index] === squares[first])) {
+            return { winner: squares[first], winningMove: line };
         }
     }
+
     return { winner: null, winningMove: [] };
 }
+
 
 interface BoardProps {
     xIsNext: boolean;
     squares: Squares;
     onPlay: (nextSquares: Squares, position:[number, number]) => void;
+    row_count: number;
 }
 
-function Board({xIsNext, squares, onPlay}: BoardProps) : React.ReactElement {
+function Board({xIsNext, squares, onPlay, row_count}: BoardProps) : React.ReactElement {
     const { winner, winningMove } = useMemo(() => calculateWinner(squares), [squares]);
     function handleClick(i: number) {
 
@@ -69,17 +98,17 @@ function Board({xIsNext, squares, onPlay}: BoardProps) : React.ReactElement {
         } else {
             nextSquares[i] = "O";
         }
-        const row = Math.floor(i / 3) + 1;
-        const col = i % 3 + 1;
+        const row = Math.floor(i / row_count) + 1;
+        const col = i % row_count + 1;
         onPlay(nextSquares, [row, col]);
     }
 
     return (
         <>
-            {Array(3).fill(null).map((_, rowIndex) => (
+            {Array(row_count).fill(null).map((_, rowIndex) => (
                 <div className="board-row" key={rowIndex}>
-                    {Array(3).fill(null).map((_, colIndex) => {
-                        const index = rowIndex * 3 + colIndex;
+                    {Array(row_count).fill(null).map((_, colIndex) => {
+                        const index = rowIndex * row_count + colIndex;
                         return (
                             <Square
                                 key={index}
@@ -103,9 +132,14 @@ function ToggleButton({onToggle}: ToggleButtonProps) {
     return <button onClick={onToggle}>Toogle order</button>
 }
 
-function TicTac() {
+interface TicTacProps {
+    row_count: number;
+}
+
+function TicTac({row_count}: TicTacProps) : React.ReactElement {
+    const SquaresCount = Math.pow(row_count, 2);
     const [history, setHistory] = useState<Array<HistoryEntry>>(
-        [{ squares: Array(9).fill(null), position: null }]
+        [{ squares: Array(SquaresCount).fill(null), position: null }]
     );
     const [currentMove, setCurrentMove] = useState(0);
     const xIsNext = currentMove % 2 === 0;
@@ -115,7 +149,7 @@ function TicTac() {
         setIsAscending(prevState => !prevState);
     }
     const { winner } = calculateWinner(currentSquares);
-    const gameIsFinished = winner !== null || currentMove === 9;
+    const gameIsFinished = winner !== null || currentMove === SquaresCount;
 
     function handlePlay(nextSquares: SquareValue[], position: [number, number]) {
         setHistory((prevHistory) => [
@@ -163,7 +197,7 @@ function TicTac() {
 
             <div className="game">
                 <div className="game-board">
-                    <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay}/>
+                    <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} row_count={row_count}/>
                 </div>
                 {gameIsFinished && (
                     <div className="game-info">

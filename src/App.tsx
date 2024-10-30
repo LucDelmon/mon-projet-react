@@ -19,7 +19,7 @@ function App(): React.ReactElement {
                     <Routes>
                         <Route path="/" element={<Home/>}/>
                         <Route path="/page" element={<TextAndButton/>}/>
-                        <Route path="/TicTac" element={<TicTac/>}/>
+                        <Route path="/TicTac" element={<TicTac row_count={3}/>}/>
                     </Routes>
                 </main>
 
