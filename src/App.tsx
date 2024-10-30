@@ -1,36 +1,18 @@
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import './App.css';
 import TicTac from "./TicTac";
 import TextAndButton from "./TextAndButton";
+import Header from "./Header";
+import Footer from "./Footer";
+import Home from "./Home";
 
-function Sandbox() : React.ReactElement {
-    return (
-        <div >
-            <p>Sandbox for various react test</p>
-        </div>
-    );
-}
-
-
-function Home() {
-    return (
-        <div className="Home">
-            <Sandbox />
-        </div>
-    );
-}
 
 function App(): React.ReactElement {
     return (
         <Router>
             <div className="App">
-                <header className="App-header">
-                    <h1>Welcome to my app</h1>
-                    <nav>
-                        <Link to="/">Home</Link> | <Link to="/page">Text and button</Link> | <Link to="/TicTac">Tic Tac Toe</Link>
-                    </nav>
-                </header>
+                <Header/>
 
                 {/* Main content area */}
                 <main>
@@ -42,9 +24,7 @@ function App(): React.ReactElement {
                 </main>
 
                 {/* Optional footer */}
-                <footer>
-                    <p>© 2024 My App. All rights reserved.</p>
-                </footer>
+                <Footer/>
             </div>
         </Router>
     );
